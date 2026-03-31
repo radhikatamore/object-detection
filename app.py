@@ -65,19 +65,19 @@ uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_container_width=True)
+    st.image(image, caption="Uploaded Image", width="stretch")
 
     with st.spinner("Detecting..."):
         img_array = np.array(image.convert("RGB"))
-        results = model.predict(img_array, conf=confidence)
+        results = model.predict(img_array, conf=confidence, verbose=False)
 
         result = results[0]
         plotted = result.plot()
-        st.image(plotted, caption="Detected Objects", use_container_width=True)
+        st.image(plotted, caption="Detected Objects", width="stretch")
 
         detections_df = detections_to_df(result)
         st.subheader("Detection Details")
-        st.dataframe(detections_df, use_container_width=True)
+        st.dataframe(detections_df, width="stretch")
 
         if detections_df.empty:
             st.info("No objects detected for the selected confidence threshold.")
