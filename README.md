@@ -1,1 +1,1 @@
-# Yolov8n-object-detection
+# object-detection
