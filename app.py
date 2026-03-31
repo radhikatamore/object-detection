@@ -7,13 +7,10 @@ from pathlib import Path
 
 st.set_page_config(page_title="Object Detection", layout="wide")
 
-st.title("YOLO Object Detection")
-st.write("Upload an image and run object detection using a pretrained YOLO model.")
+st.title("Object Detection")
+st.write("Upload an image and run object detection.")
 
-CUSTOM_MODEL_PATH = Path("model/object_detection.pt")
-DEFAULT_MODEL_NAME = "yolov8n.pt"
-
-MODEL_NAME = str(CUSTOM_MODEL_PATH) if CUSTOM_MODEL_PATH.exists() else DEFAULT_MODEL_NAME
+MODEL_PATH = Path("model/object_detection.pt")
 
 confidence = st.sidebar.slider(
     "Confidence threshold",
@@ -26,13 +23,12 @@ confidence = st.sidebar.slider(
 
 @st.cache_resource
 def load_model() -> YOLO:
-    return YOLO(MODEL_NAME)
+    return YOLO(MODEL_PATH)
 
 
 try:
     model = load_model()
     st.sidebar.success("Model loaded successfully")
-    st.sidebar.caption(f"Using model: {MODEL_NAME}")
 except Exception as e:
     st.sidebar.error(f"Error loading model: {e}")
     st.stop()
