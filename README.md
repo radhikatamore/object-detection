@@ -1,6 +1,6 @@
 # Object Detection Streamlit App
 
-A simple Streamlit app for object detection on uploaded images.
+A Streamlit app for object detection on uploaded images.
 
 ## Features
 
@@ -9,8 +9,6 @@ A simple Streamlit app for object detection on uploaded images.
 - Confidence threshold slider
 - Annotated output image
 - Detection table with class, confidence, and bounding boxes
-- Model fallback:
-  - Uses `model/object_detection.pt` if present
 
 ## Project Files
 
@@ -39,9 +37,9 @@ python -m streamlit run app.py
 
 - This ensures Streamlit runs from the active virtual environment.
 
-## Optional Custom Model
+## Model
 
-If you want to use your own trained model, place it at:
+Place your model at:
 
 ```text
 model/object_detection.pt
