@@ -1,4 +1,5 @@
-tensflow
-pillow
 streamlit
+ultralytics
+pillow
 numpy
+pandas
