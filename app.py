@@ -3,13 +3,17 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 from ultralytics import YOLO
+from pathlib import Path
 
 st.set_page_config(page_title="Object Detection", layout="wide")
 
 st.title("YOLO Object Detection")
 st.write("Upload an image and run object detection using a pretrained YOLO model.")
 
-MODEL_NAME = "model/object_detection.pt"
+CUSTOM_MODEL_PATH = Path("model/object_detection.pt")
+DEFAULT_MODEL_NAME = "yolov8n.pt"
+
+MODEL_NAME = str(CUSTOM_MODEL_PATH) if CUSTOM_MODEL_PATH.exists() else DEFAULT_MODEL_NAME
 
 confidence = st.sidebar.slider(
     "Confidence threshold",
@@ -28,6 +32,7 @@ def load_model() -> YOLO:
 try:
     model = load_model()
     st.sidebar.success("Model loaded successfully")
+    st.sidebar.caption(f"Using model: {MODEL_NAME}")
 except Exception as e:
     st.sidebar.error(f"Error loading model: {e}")
     st.stop()
@@ -62,20 +67,19 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption="Uploaded Image", use_container_width=True)
 
-    if st.button("Run Detection"):
-        with st.spinner("Detecting..."):
-            img_array = np.array(image.convert("RGB"))
-            results = model.predict(img_array, conf=confidence)
+    with st.spinner("Detecting..."):
+        img_array = np.array(image.convert("RGB"))
+        results = model.predict(img_array, conf=confidence)
 
-            result = results[0]
-            plotted = result.plot()
-            st.image(plotted, caption="Detected Objects", use_container_width=True)
+        result = results[0]
+        plotted = result.plot()
+        st.image(plotted, caption="Detected Objects", use_container_width=True)
 
-            detections_df = detections_to_df(result)
-            st.subheader("Detection Details")
-            st.dataframe(detections_df, use_container_width=True)
+        detections_df = detections_to_df(result)
+        st.subheader("Detection Details")
+        st.dataframe(detections_df, use_container_width=True)
 
-            if detections_df.empty:
-                st.info("No objects detected for the selected confidence threshold.")
+        if detections_df.empty:
+            st.info("No objects detected for the selected confidence threshold.")
 else:
     st.info("Please upload an image file.")
